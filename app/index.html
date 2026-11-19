@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Регистрация</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px 20px 40px;
+      font-family: Arial, sans-serif;
+      color: #142d3e;
+
+      background-color: #244e6a;
+      background-image:
+        linear-gradient(
+          rgba(9, 29, 43, 0.18),
+          rgba(9, 29, 43, 0.32)
+        ),
+        url("/background.jpg");
+
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    .site-header {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      color: white;
+    }
+
+    .brand {
+      color: white;
+      font-size: 26px;
+      font-weight: bold;
+      text-decoration: none;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+      transition: opacity 0.2s ease;
+    }
+
+    .brand:hover {
+      opacity: 0.8;
+    }
+
+    main {
+      position: relative;
+      width: min(440px, 100%);
+      margin: 48px auto 0;
+      overflow: hidden;
+
+      background: rgba(224, 239, 248, 0.68);
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      border-radius: 22px;
+
+      box-shadow:
+        0 20px 60px rgba(5, 24, 38, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    /* Светлая кромка стеклянной карточки */
+    main::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 15%;
+      width: 70%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.95),
+        transparent
+      );
+      pointer-events: none;
+    }
+
+    section {
+      padding: 30px 34px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 30px;
+    }
+
+    .subtitle {
+      margin: 0 0 26px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #2d4b60;
+    }
+
+    .field {
+      margin-top: 20px;
+    }
+
+    .field > label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    /* Обёртка перемещает поле и иконку вместе */
+    .input-wrap {
+      position: relative;
+      border-radius: 6px 6px 0 0;
+      transition:
+        transform 0.22s ease,
+        background-color 0.22s ease;
+    }
+
+    .input-wrap:hover {
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .input-wrap:focus-within {
+      transform: translateY(-2px);
+      background-color: rgba(255, 255, 255, 0.24);
+    }
+
+    input:not([type="checkbox"]) {
+      display: block;
+      width: 100%;
+      min-height: 44px;
+      padding: 11px 38px 11px 7px;
+
+      border: 0;
+      border-bottom: 2px solid #365469;
+      border-radius: 6px 6px 0 0;
+
+      background: transparent;
+      color: #102a3b;
+      font: inherit;
+      font-size: 16px;
+
+      transition:
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+    }
+
+    input:not([type="checkbox"]):focus {
+      border-bottom-color: #075c95;
+      box-shadow: 0 5px 10px -7px rgba(7, 92, 149, 0.75);
+    }
+
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+
+      width: 19px;
+      height: 19px;
+
+      color: #365469;
+      transform: translateY(-50%);
+      pointer-events: none;
+
+      transition:
+        color 0.22s ease,
+        transform 0.22s ease;
+    }
+
+    .input-wrap:focus-within .input-icon {
+      color: #075c95;
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    input:focus-visible,
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #075c95;
+      outline-offset: 4px;
+    }
+
+    .brand:focus-visible {
+      outline-color: #d7f3ff;
+    }
+
+    .hint {
+      margin: 9px 0 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #2d4b60;
+    }
+
+    .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 22px;
+
+      font-size: 13px;
+      font-weight: normal;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .consent input {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      margin: 2px 0 0;
+      accent-color: #16384e;
+      cursor: pointer;
+    }
+
+    .submit-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      width: 100%;
+      min-height: 48px;
+      margin-top: 22px;
+      padding: 13px 16px;
+
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+
+      background: linear-gradient(115deg, #153448, #1b4b63);
+      color: white;
+
+      font: inherit;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+
+      box-shadow:
+        0 4px 12px rgba(10, 35, 52, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+      transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+    }
+
+    .button-arrow {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      transition: transform 0.22s ease;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(1.15);
+      box-shadow: 0 8px 20px rgba(10, 35, 52, 0.3);
+    }
+
+    .submit-button:hover:not(:disabled) .button-arrow {
+      transform: translateX(4px);
+    }
+
+    .submit-button:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 3px 8px rgba(10, 35, 52, 0.2);
+    }
+
+    .submit-button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    [role="alert"],
+    [role="status"] {
+      margin: 18px 0 0;
+      padding: 12px;
+      border: 1px solid;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    [role="alert"] {
+      border-color: #e8bdc5;
+      background: #fff0f1;
+      color: #8a1828;
+    }
+
+    [role="status"] {
+      border-color: #b0d7be;
+      background: #e9f8ef;
+      color: #155b37;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 20px 16px 32px;
+        background-attachment: scroll;
+      }
+
+      .brand {
+        font-size: 21px;
+      }
+
+      main {
+        margin-top: 30px;
+      }
+
+      section {
+        padding: 26px 24px;
+      }
+    }
+
+    /* Учитываем системную настройку уменьшения анимации */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+
+      .input-wrap:focus-within,
+      .submit-button:hover:not(:disabled),
+      .submit-button:hover:not(:disabled) .button-arrow {
+        transform: none;
+      }
+
+      .input-wrap:focus-within .input-icon {
+        transform: translateY(-50%);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Банк</a>
+  </header>
+
+  <main>
+    <section>
+      <h1>Регистрация</h1>
+      <p class="subtitle">Заполните данные нового пользователя.</p>
+
+      <form id="registration-form" novalidate>
+
+        <div class="field">
+          <label for="email">Email</label>
+
+          <div class="input-wrap">
+            <input
+              id="email"
+              type="email"
+              autocomplete="email"
+              required
+            >
+
+            <svg
+              class="input-icon"
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="5" width="18" height="14" rx="3"/>
+              <path d="m4 7 8 6 8-6"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Пароль</label>
+
+          <div class="input-wrap">
+            <input
+              id="password"
+              type="password"
+              autocomplete="new-password"
+              aria-describedby="password-hint"
+              required
+            >
+
+            <svg
+              class="input-icon"
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="5" y="10" width="14" height="11" rx="3"/>
+              <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+              <path d="M12 15v2"/>
+            </svg>
+          </div>
+
+          <p id="password-hint" class="hint">
+            От 12 до 64 символов: строчная и заглавная латинские
+            буквы, цифра и спецсимвол из !@#$%^&amp;*
+          </p>
+        </div>
+
+        <div class="field">
+          <label for="confirm-password">Подтверждение пароля</label>
+
+          <div class="input-wrap">
+            <input
+              id="confirm-password"
+              type="password"
+              autocomplete="new-password"
+              required
+            >
+
+            <svg
+              class="input-icon"
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="m12 3 8 3v6c0 4-3.7 7.3-8 9-4.3-1.7-8-5-8-9V6l8-3Z"
+              />
+              <path d="m8.5 12 2.3 2.3 4.7-4.6"/>
+            </svg>
+          </div>
+        </div>
+
+        <label class="consent" for="consent">
+          <input id="consent" type="checkbox">
+          <span>Принимаю условия регистрации</span>
+        </label>
+
+        <button class="submit-button" type="submit">
+          <span>Зарегистрироваться</span>
+        </button>
+
+        <p role="alert" hidden></p>
+        <p role="status" hidden></p>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const form = document.querySelector('#registration-form');
+    const error = document.querySelector('[role="alert"]');
+    const success = document.querySelector('[role="status"]');
+    const button = form.querySelector('button');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      error.hidden = true;
+      success.hidden = true;
+      error.textContent = '';
+      success.textContent = '';
+      button.disabled = true;
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.querySelector('#email').value,
+            password: document.querySelector('#password').value,
+            confirmPassword:
+              document.querySelector('#confirm-password').value,
+            consent: document.querySelector('#consent').checked
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          success.textContent = result.message;
+          success.hidden = false;
+        } else {
+          error.textContent = result.error;
+          error.hidden = false;
+        }
+      } catch {
+        error.textContent = 'Сервер недоступен. Попробуйте позже';
+        error.hidden = false;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
